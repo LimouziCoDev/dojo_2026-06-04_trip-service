@@ -2,28 +2,28 @@
 
 import UserSession from './UserSession.js'
 import TripDAO from './TripDAO.js'
+import User from './User.js'
 
 class TripService {
     getTripsByUser(user) {
-        let tripList = []
-        let loggedUser = UserSession.getLoggedUser()
-        let isFriend = false
+        let loggedUser = this.getLoggedUser()
         if (loggedUser != null) {
-            let friends = user.getFriends()
-            for (let i=0; i < friends.length; i++) {
-                let friend = friends[i]
-                if (friend == loggedUser) {
-                    isFriend = true
-                    break
-                }
-            }
+            let isFriend = user.hasFriend(loggedUser);
             if (isFriend) {
-                tripList = TripDAO.findTripsByUser(user)
+                return this.getTripList(user)
             }
-            return tripList
+            return []
         } else {
             throw new Error('User not logged in.')
         }
+    }
+
+    getTripList(user) {
+        return TripDAO.findTripsByUser(user);
+    }
+
+    getLoggedUser() {
+        return UserSession.getLoggedUser();
     }
 }
 

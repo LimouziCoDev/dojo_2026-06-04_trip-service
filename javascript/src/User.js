@@ -8,4 +8,9 @@ export default class User {
     getFriends() {
         return this.friends
     }
+
+    hasFriend(loggedUser) {
+        let friends = this.getFriends();
+        return friends.includes(loggedUser);
+    }
 }
